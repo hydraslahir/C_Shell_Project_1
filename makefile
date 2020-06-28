@@ -1,2 +1,2 @@
 default:
-	gcc main.c -o output
+	gcc main.c -o monshell

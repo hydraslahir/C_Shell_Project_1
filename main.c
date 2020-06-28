@@ -12,9 +12,9 @@
 #define NC "\e[39m"
 
 #define LS "ls"
-#define CD "cd"
-#define CLEAR "clear"
-#define MAN "man"
+#define CD "dir"
+#define CLEAR "clr"
+#define MAN "help"
 
 void clearArgs(char **array){
 
@@ -67,8 +67,6 @@ void analyseLine(char* arguments[],char* rest,bool debug){
     char _buffer[1024];
     cwd = getcwd(_buffer, 1024 * 8);
 
-
-
     if(arguments[0] != NULL){
 /************************** CLEAR ***************************/
         if(strcmp(arguments[0], CLEAR) == 0){
@@ -97,6 +95,15 @@ void analyseLine(char* arguments[],char* rest,bool debug){
             }else{
                 execlp("man", "man", arguments[1], NULL);
             }
+        }else{
+            /*************************** EXECUTE EXTERNE COMME UN APPEL DE PROGRMAME PAR LE SHELL *******************/
+            char ms[300];
+            strcat(ms,"parent=");
+            strcat(ms,cwd);
+            strcat(ms,"/monshell");
+            putenv(ms);
+
+            system(arguments[0]);
         }
         exit(-1);
     }
@@ -125,6 +132,13 @@ int main(int argc, char* argv[]) {
             print = false;
         }
     }
+
+    /** ENV shell=.../monshell"*/
+    char ms[300];
+    strcat(ms,"shell=");
+    strcat(ms,cwd);
+    strcat(ms,"/monshell");
+    putenv(ms);
 
     system("clear");
 
